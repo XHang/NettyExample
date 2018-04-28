@@ -27,11 +27,13 @@ public class DiscardServer {
     }
     
     public void run() throws Exception {
-        EventLoopGroup bossGroup = new NioEventLoopGroup(); // (1)
+        //作用：接受传入的链接，并将连接扔给workerGroup
+        EventLoopGroup bossGroup = new NioEventLoopGroup();
+        //处理连接的流量
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
-            ServerBootstrap b = new ServerBootstrap(); // (2)
-            b.group(bossGroup, workerGroup)
+            ServerBootstrap bootstrap = new ServerBootstrap(); // (2)
+            bootstrap.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class) // (3)
              .childHandler(new ChannelInitializer<SocketChannel>() { // (4)
                  @Override
@@ -43,7 +45,7 @@ public class DiscardServer {
              .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
     
             // 绑定并开始接收链接
-            ChannelFuture f = b.bind(port).sync(); // (7)
+            ChannelFuture f = bootstrap.bind(port).sync(); // (7)
     
            //等待Server Socket 关闭,在这个例子中,这不会发生,但是你可以做到这一点
             //关闭你的服务器
@@ -53,7 +55,12 @@ public class DiscardServer {
             bossGroup.shutdownGracefully();
         }
     }
-    
+
+    /**
+     * 主方法，运行它Get一个服务器
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
         int port;
         if (args.length > 0) {

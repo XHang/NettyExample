@@ -1,6 +1,5 @@
 package com.netty.discard;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 import io.netty.buffer.ByteBuf;
@@ -11,6 +10,7 @@ import io.netty.util.ReferenceCountUtil;
  * 小程序:实现一个接收数据的服务端,但是丢弃接收到的数据
  * 这个类继承了ChannelInboundHandlerAdapter,而这个父类又实现了ChannelInboundHandler
  * 它提供了很多事件方法,你可以覆盖实现它
+ * 测试方法，可以键入 telnet localhost 8080 尝试向这个服务器发送消息
  * @author cxh
  *
  */
@@ -31,13 +31,20 @@ public class DiscardServerHandler extends ChannelInboundHandlerAdapter{
 	            System.out.flush();
 	        }*/
 	    } finally {
-	    	//释放引用计数器的对象msg
+	    	//释放资源
 	        ReferenceCountUtil.release(msg); // (2)
 	    }
 	}
+
+	/**
+	 * 由于IO错而导致异常或者channelRead方法抛出异常都会调用到此方法
+	 * @param ctx
+	 * @param cause
+	 */
 	 @Override
 	    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) { // (4)
 	        // 当异常发生时关闭链接
+
 	        cause.printStackTrace();
 	        ctx.close();
 	    }
