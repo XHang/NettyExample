@@ -1,7 +1,8 @@
-package com.netty.discard;
+package com.netty.handler;
 
 import java.nio.charset.Charset;
 
+import com.netty.uitl.BufferUitl;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -21,20 +22,21 @@ public class DiscardServerHandler extends ChannelInboundHandlerAdapter{
 	 */
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) {
-	    ByteBuf in = (ByteBuf) msg;
+	    ByteBuf buf = (ByteBuf) msg;
 	    try {
-	    	String info = in.toString(Charset.forName("utf-8"));
-	    	System.out.println(info);
-	       /* while (in.isReadable()) { // (1)
-	            System.out.print((char) in.readByte());
-	            in.
-	            System.out.flush();
-	        }*/
+	    	String message = BufferUitl.getContentOfOld(buf);
+	    	String msgOfSend = "I already received you message："+message;
+	    	System.out.println(msgOfSend);
+	    	//下面两句可以合并为ctx.writeAndFlush(msg) ；
+			ctx.write('a');
+			ctx.flush();
 	    } finally {
 	    	//释放资源
 	        ReferenceCountUtil.release(msg); // (2)
 	    }
 	}
+
+
 
 	/**
 	 * 由于IO错而导致异常或者channelRead方法抛出异常都会调用到此方法
