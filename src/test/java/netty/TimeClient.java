@@ -1,7 +1,6 @@
 package netty;
 
 import com.netty.handler.TimeClientHandler;
-import com.netty.handler.TimeServerHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -26,7 +25,6 @@ public class TimeClient {
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 protected void initChannel(SocketChannel ch) throws Exception {
                     ch.pipeline().addLast(new TimeClientHandler());
-
                 }
             });
             ChannelFuture channelFuture = bootstrap.connect(DESC_HOST,DESC_PORT);
