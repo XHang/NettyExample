@@ -107,6 +107,31 @@
 
    其中`byteBuf`在方法`handlerAdded`执行时创建，在`handlerRemoved`方法执行时释放。
 
-   当channelRead第一次执行时读取不足4个字节，下次发送端传来数据就可以接着填充直至4个字段填满。
+   ```
+   @Override
+       public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+           byteBuf = ctx.alloc().buffer(4);
+       }
+   ```
+
+   ```
+    @Override
+       public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+           byteBuf.release();
+           byteBuf = null;
+       }
+   ```
 
    ​
+
+   当channelRead第一次执行时读取不足4个字节，下次发送端传来数据就可以接着填充直至4个字段填满。
+
+   第三种解决方案：
+
+   其实呢，就是把分批次接受的处理和数据处理分成两部分。也就是两个`ChannelHandler`
+
+   然后添加的客户端管道的末尾。
+
+   对了，关于分批次接受的处理器,Netty提供了一个类方便你编写这个分批次处理的处理器`ByteToMessageDecoder `
+
+   这个类实现了`ChannelInboundHandler` 可以很方便的处理这种碎片问题。
