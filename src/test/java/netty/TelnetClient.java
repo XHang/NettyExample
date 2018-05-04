@@ -4,6 +4,7 @@ import com.netty.handler.TelnetClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
@@ -23,6 +24,7 @@ public class TelnetClient {
         Channel channel = null;
         try {
             bootstrap.group(clientEvent);
+            bootstrap.channel(NioSocketChannel.class);
             bootstrap.handler(new ChannelInitializer(){
                 protected void initChannel(Channel ch) throws Exception {
                     ChannelHandler frameDecoder = new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter());

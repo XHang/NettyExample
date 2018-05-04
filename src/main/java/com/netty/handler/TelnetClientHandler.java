@@ -13,7 +13,7 @@ public class TelnetClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String str = (String) msg;
-        System.out.println("server say"+str);
+        System.out.println("server say:"+str);
         super.channelRead(ctx, msg);
     }
 
