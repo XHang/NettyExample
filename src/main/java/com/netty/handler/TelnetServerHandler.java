@@ -36,22 +36,22 @@ public class TelnetServerHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-        System.out.println("channelRead run!");
         String request =  msg;
         boolean isclose = false;
         ChannelFuture channelFuture = null;
-        System.out.println("client say"+request);
+        System.out.println("client say:"+request);
+        String response = null;
         //如果客户端没有发送任何数据过来的话，返回提醒的信息
-        if(request !=null || request.isEmpty()){
-            channelFuture =ctx.write("please type msg");
+        if(request ==null || request.isEmpty()){
+            response = "please type msg";
         }else if("bye".equals(request)){
-            channelFuture = ctx.write("have a good day!");
+            response = "have a good day!";
             isclose = true;
-            return;
         }else{
-            channelFuture= ctx.write("Di you say"+request+"?");
+            response = "Di you say:"+request+"?";
         }
-        System.out.println("should send success!");
+        response+="\r\n";
+        channelFuture =  ctx.writeAndFlush(response);
         if (isclose){
             if (channelFuture!=null){
                 channelFuture.sync();

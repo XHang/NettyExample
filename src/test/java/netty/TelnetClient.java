@@ -43,6 +43,7 @@ public class TelnetClient {
                 if(line == null){
                     break;
                 }
+                line+="\r\n";
                 //写入的同时也将发送到服务端。。虽然不是立即发送，因为是异步的
                 lastWriteFuture  = channel.writeAndFlush(line);
                 if("bye".equals(line)){

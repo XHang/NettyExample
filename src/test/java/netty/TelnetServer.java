@@ -2,6 +2,8 @@ package netty;
 
 import com.netty.handler.TelnetServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -23,7 +25,7 @@ public class TelnetServer {
 
     public static void main (String[] args) throws InterruptedException {
         ServerBootstrap serverbootStart = new ServerBootstrap();
-        EventLoopGroup boss  = new NioEventLoopGroup(1);
+        EventLoopGroup boss  = new NioEventLoopGroup();
         EventLoopGroup worker  = new NioEventLoopGroup();
         try {
             serverbootStart.group(boss,worker);

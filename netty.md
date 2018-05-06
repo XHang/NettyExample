@@ -161,3 +161,42 @@
    里面递归退出的条件需要再看下。
 
    以上
+
+2018/5/6 新的知识如下
+
+1：其实处理器并非真的递归执行吧，跟拦截器一样，都是责任链模式。
+
+2：想看源码来知道自己为什么程序有问题的我，实在是太笨了，对于一些简单的源代码还可以，涉及到各种涉及模式和数据的结构源码，还是算了吧，这种源码只有在得知代码的作用下看才能看出端倪。
+
+总之外事问谷歌，内事问Stack Overflow。
+
+另：以上问题已经解决。
+
+其原因是客户端发给服务端的信息是不带分行符号的，但是服务端有一个信息处理器`DelimiterBasedFrameDecoder`，当服务端受到的信息包含换行符号时，才会把之前所有受到的消息，送进Read方法里面。
+
+之前服务端收到的信息都是不包含换行符的，所以呢？就永远被`DelimiterBasedFrameDecoder`拦截了。
+
+不过即使如此，每次服务端收到来自客户端的消息时，都会执行`channelReadComplete`方法，以上。
+
+另注下`DelimiterBasedFrameDecoder`类
+
+它有一个构造器
+
+`public DelimiterBasedFrameDecoder(int maxFrameLength, ByteBuf delimiter)`
+
+第一个参数是接受数据最大的帧数。如果该处理器接受的数据都超过这个帧数了，还找不到分割符号，就会抛异常。
+
+第二个参数当然就是分割符了。
+
+Netty提供了一些常用的分割符
+
+`Delimiters.lineDelimiter()`其实就是`\r\n`
+
+如果你想自己定义自己的分割符，可以
+
+`ByteBuf delimiter = Unpooled.copiedBuffer("1".getBytes());`
+
+以上。 
+
+
+
