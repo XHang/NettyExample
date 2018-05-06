@@ -48,7 +48,7 @@ public class TelnetServer {
                     pipeline.addLast(telnetHandler);
                 }
             });
-            //这么写的话，不就是会关闭服务器吗？
+            //TODO 这么写的话，不就是会关闭服务器吗？
             serverbootStart.bind(PORT).sync().channel().closeFuture().sync();
         } finally {
             worker.shutdownGracefully();
