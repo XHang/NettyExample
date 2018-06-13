@@ -42,9 +42,9 @@ public class TelnetServer {
                     ChannelHandler decoder = new StringDecoder();
                     ChannelHandler encoder = new StringEncoder();
                     ChannelHandler telnetHandler = new TelnetServerHandler();
-                    pipeline.addLast(frameDecoder);
+                    /*pipeline.addLast(frameDecoder);
                     pipeline.addLast(decoder);
-                    pipeline.addLast(encoder);
+                    pipeline.addLast(encoder);*/
                     pipeline.addLast(telnetHandler);
                 }
             });
